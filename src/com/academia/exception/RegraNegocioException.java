@@ -1,5 +1,4 @@
 package com.academia.exception;
-package com.academia.exception;
 
 public class RegraNegocioException extends AcademiaException {
 
