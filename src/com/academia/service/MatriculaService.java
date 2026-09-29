@@ -10,10 +10,17 @@ import com.academia.repository.MatriculaRepository;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * [PRINCÍPIO SOLID: SRP & DIP]
+ * Serviço responsável por coordenar as regras de negócio das matrículas.
+ * Utiliza Injeção de Dependência e o padrão Factory (PlanoFactory).
+ */
 public class MatriculaService {
 
+	// [INJEÇÃO DE DEPENDÊNCIA - DIP] Depende de abstração (Interface MatriculaRepository), não de classe concreta
 	private final MatriculaRepository matriculaRepository;
 
+	// Injeção via Construtor
 	public MatriculaService(MatriculaRepository matriculaRepository) {
 		if (matriculaRepository == null) {
 			throw new IllegalArgumentException("O repositório de matrículas é obrigatório");
@@ -29,6 +36,7 @@ public class MatriculaService {
 			throw new RegraNegocioException("O aluno já possui uma matrícula ativa");
 		}
 
+		// [USO DO FACTORY] A criação do objeto Plano é delegada ao PlanoFactory
 		Matricula matricula = new Matricula(null, alunoId, PlanoFactory.criarPlano(tipoPlano), LocalDate.now());
 		return matriculaRepository.salvar(matricula);
 	}

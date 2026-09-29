@@ -8,11 +8,20 @@ import com.academia.repository.InstrutorRepository;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * [PRINCÍPIO SOLID: SRP & DIP]
+ * Serviço responsável pelo gerenciamento de instrutores.
+ * Recebe o InstrutorRepository via Injeção de Dependência pelo construtor.
+ */
 public class InstrutorService {
 
+    // [INJEÇÃO DE DEPENDÊNCIA - DIP] Depende da interface InstrutorRepository
     private final InstrutorRepository instrutorRepository;
 
     public InstrutorService(InstrutorRepository instrutorRepository) {
+        if (instrutorRepository == null) {
+            throw new IllegalArgumentException("O repositório de instrutores é obrigatório");
+        }
         this.instrutorRepository = instrutorRepository;
     }
 

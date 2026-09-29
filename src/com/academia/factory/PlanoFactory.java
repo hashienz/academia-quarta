@@ -7,6 +7,11 @@ import com.academia.model.PlanoMensal;
 import com.academia.model.PlanoTrimestral;
 import com.academia.model.PlanoVip;
 
+/**
+ * [PADRÃO DE PROJETO: FACTORY METHOD / SIMPLE FACTORY]
+ * Centraliza a instanciação de objetos da hierarquia Plano.
+ * O código cliente solicita o plano via TipoPlano sem conhecer as classes concretas.
+ */
 public final class PlanoFactory {
 
 	private PlanoFactory() {

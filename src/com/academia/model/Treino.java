@@ -1,90 +1,58 @@
 package com.academia.model;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-
+/**
+ * Entidade de domínio que associa um Aluno, um Instrutor e uma lista de Exercícios.
+ */
 public class Treino {
 
-    private String id;
-    private String nome;
+    private Long id;
+    private String nomeTreino;
     private String objetivo;
     private Aluno aluno;
     private Instrutor instrutor;
-    private List <Exercicio> exercicios;
-    private LocalDate dataCriacao;
+    private List<Exercicio> exercicios;
 
-
-    public Treino(String id, String nome, String objetivo, Aluno aluno, Instrutor instrutor, List <Exercicio> exercicios){
+    public Treino(Long id, String nomeTreino, String objetivo, Aluno aluno, Instrutor instrutor) {
         this.id = id;
-        this.nome = nome;
+        this.nomeTreino = nomeTreino;
         this.objetivo = objetivo;
         this.aluno = aluno;
         this.instrutor = instrutor;
-        this.exercicios = exercicios;
-        this.dataCriacao = LocalDate.now();
+        this.exercicios = new ArrayList<>();
     }
 
-    public String getId(){
+    public Long getId() {
         return id;
     }
-    public void setId(String id){
+
+    public void setId(Long id) {
         this.id = id;
     }
-    public String getNome(){
-        return nome;
+
+    public String getNomeTreino() {
+        return nomeTreino;
     }
-    public void setNome(String nome){
-        this.nome = nome;
-    }
-    public String getObjetivo(){
+
+    public String getObjetivo() {
         return objetivo;
     }
-    public void setObjetivo(String objetivo){
-        this.objetivo = objetivo;
-    }
-    public Aluno getAluno(){
+
+    public Aluno getAluno() {
         return aluno;
     }
-    public void setAluno(Aluno aluno){
-        this.aluno = aluno;
-    }
-    public Instrutor getInstrutor(){
+
+    public Instrutor getInstrutor() {
         return instrutor;
     }
-    public void setInstrutor(Instrutor instrutor){
-        this.instrutor = instrutor;
-    }
-    public List<Exercicio> getExercicios(){
+
+    public List<Exercicio> getExercicios() {
         return exercicios;
     }
-    public void setExercicios(List<Exercicio> exercicios){
-        this.exercicios = exercicios;
-    }
-    public LocalDate getDataCriacao(){
-        return dataCriacao;
-    }
-    public void setDataCriacao(LocalDate dataCriacao){
-        this.dataCriacao = dataCriacao;
-    }
 
-    @Override
-    public int hashCode(){
-        return Objects.hash(id);
+    public void adicionarExercicio(Exercicio exercicio) {
+        this.exercicios.add(exercicio);
     }
-
-    @Override
-    public String toString(){
-        return "Treino{id='" + id + "'\n" +
-                "nome='" + nome + "'\n" +
-                "objetivo='" + objetivo + "'\n" +
-                "aluno=" + aluno.getId() + "\n" +
-                "instrutor=" + instrutor.getId() + "\n" +
-                "exercicios=" + exercicios + "\n" +
-                "dataCriacao=" + dataCriacao + "\n" +
-                "}";
-    }
-    
 }

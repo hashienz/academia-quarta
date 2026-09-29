@@ -1,5 +1,10 @@
 package com.academia.config;
 
+/**
+ * [PADRÃO DE PROJETO: SINGLETON]
+ * Garante uma única instância global de configurações da academia durante a execução.
+ * Possui construtor privado e método de acesso estático thread-safe (synchronized).
+ */
 public class AcademiaConfig {
 
     private static AcademiaConfig instance;
@@ -10,14 +15,16 @@ public class AcademiaConfig {
     private String horarioAbertura;
     private String horarioFechamento;
 
+    // Construtor privado impede instanciação externa direta
     private AcademiaConfig() {
         this.nomeAcademia = "Academia Quarta";
         this.capacidadeMaximaAlunos = 200;
-        this.percentualDescontoPlanoAnual = 0.15;
+        this.percentualDescontoPlanoAnual = 0.15; // 15% de desconto padrão
         this.horarioAbertura = "06:00";
         this.horarioFechamento = "23:00";
     }
 
+    // Ponto global de acesso controlado
     public static synchronized AcademiaConfig getInstance() {
         if (instance == null) {
             instance = new AcademiaConfig();

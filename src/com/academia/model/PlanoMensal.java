@@ -1,16 +1,22 @@
 package com.academia.model;
 
+/**
+ * Subclasse concreta representando o Plano Mensal.
+ * Herda de Plano e define o desconto e benefícios específicos.
+ */
 public class PlanoMensal extends Plano {
 
-    public PlanoMensal() { super("Mensal", 150.0, 1);}
+    public PlanoMensal() {
+        super("Mensal", 150.0, 1);
+    }
 
     @Override
     protected double getPercentualDesconto() {
-        return AcademiaConfig.getInstance().getPercentualDescontoPlanoAnual();
+        return 0.0; // Plano mensal padrão sem desconto
     }
 
     @Override
     public String getBeneficios() {
-        return "Acesso total + avaliação física";
+        return "Acesso à musculação e área cardio";
     }
 }
