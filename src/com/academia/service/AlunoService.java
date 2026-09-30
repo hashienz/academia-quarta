@@ -40,15 +40,4 @@ public class AlunoService {
         return alunoRepository.buscarTodos();
     }
 
-    public void desativarMatricula(Long id) {
-        Aluno aluno = buscarPorId(id);
-        aluno.setMatriculaAtiva(false);
-        alunoRepository.salvar(aluno);
-    }
-
-    public void ativarMatricula(Long id) {
-        Aluno aluno = buscarPorId(id);
-        aluno.setMatriculaAtiva(true);
-        alunoRepository.salvar(aluno);
-    }
 }

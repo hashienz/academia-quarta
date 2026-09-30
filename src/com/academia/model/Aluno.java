@@ -9,7 +9,7 @@ public class Aluno extends Pessoa {
 
     public Aluno(Long id, String nome, String cpf, String email, LocalDate dataNascimento) {
         super(id, nome, cpf, email, dataNascimento);
-        this.matriculaAtiva = true;
+        this.matriculaAtiva = false;
     }
 
     public Aluno(Long id, String nome, String cpf, String email, LocalDate dataNascimento, boolean matriculaAtiva) {

@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Academia Quarta" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.academia.Main" />
+    <module name="academia-quarta" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

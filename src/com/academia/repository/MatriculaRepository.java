@@ -5,17 +5,10 @@ import com.academia.model.Matricula;
 import java.util.List;
 import java.util.Optional;
 
-public interface MatriculaRepository {
-
-	Matricula salvar(Matricula matricula);
-
-	Optional<Matricula> buscarPorId(Long id);
-
-	List<Matricula> buscarTodos();
+public interface MatriculaRepository extends Repository<Matricula, Long> {
 
 	List<Matricula> buscarPorAlunoId(Long alunoId);
 
 	Optional<Matricula> buscarAtivaPorAlunoId(Long alunoId);
 
-	boolean deletar(Long id);
 }

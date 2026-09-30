@@ -1,13 +1,14 @@
 package com.academia;
 
 import com.academia.config.AcademiaConfig;
+import com.academia.exception.EntidadeNaoEncontradaException;
+import com.academia.exception.RegraNegocioException;
 import com.academia.factory.TipoPlano;
 import com.academia.model.*;
 import com.academia.repository.*;
 import com.academia.service.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class Main {
 
@@ -35,8 +36,8 @@ public class Main {
         // Injeção de Dependências via Construtor nos Serviços
         AlunoService alunoService = new AlunoService(alunoRepo);
         InstrutorService instrutorService = new InstrutorService(instrutorRepo);
-        MatriculaService matriculaService = new MatriculaService(matriculaRepo);
-        TreinoService treinoService = new TreinoService(treinoRepo, alunoRepo, instrutorRepo);
+        MatriculaService matriculaService = new MatriculaService(matriculaRepo, alunoRepo);
+        TreinoService treinoService = new TreinoService(treinoRepo, alunoRepo, instrutorRepo, matriculaRepo);
 
         System.out.println("[OK] Serviços inicializados com suas abstrações injetadas com sucesso.\n");
 
@@ -79,6 +80,18 @@ public class Main {
         System.out.println("Plano: " + mat2.getPlano().getDescricao());
         System.out.println("Valor Total com Desconto: R$ " + String.format("%.2f", mat2.getPlano().calcularValorTotal()));
         System.out.println("Benefícios: " + mat2.getPlano().getBeneficios() + "\n");
+
+        // Tratamento de erros de negócio sem interromper a demonstração.
+        try {
+            matriculaService.matricular(aluno1.getId(), TipoPlano.MENSAL);
+        } catch (RegraNegocioException e) {
+            System.out.println("Matrícula duplicada bloqueada: " + e.getMessage());
+        }
+        try {
+            matriculaService.matricular(999L, TipoPlano.MENSAL);
+        } catch (EntidadeNaoEncontradaException e) {
+            System.out.println("Aluno inexistente bloqueado: " + e.getMessage() + "\n");
+        }
 
         // --------------------------------------------------------------------
         // 5. PRESCRIÇÃO E GESTÃO DE TREINOS

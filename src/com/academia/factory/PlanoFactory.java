@@ -8,31 +8,55 @@ import com.academia.model.PlanoTrimestral;
 import com.academia.model.PlanoVip;
 
 /**
- * [PADRÃO DE PROJETO: FACTORY METHOD / SIMPLE FACTORY]
- * Centraliza a instanciação de objetos da hierarquia Plano.
- * O código cliente solicita o plano via TipoPlano sem conhecer as classes concretas.
+ * Factory Method: cada criador concreto implementa criar() para produzir um Plano.
+ * criarPlano(TipoPlano) mantém um ponto de entrada simples para os serviços.
  */
-public final class PlanoFactory {
+public abstract class PlanoFactory {
 
-	private PlanoFactory() {
-	}
+	protected abstract Plano criar();
 
 	public static Plano criarPlano(TipoPlano tipoPlano) {
 		if (tipoPlano == null) {
 			throw new RegraNegocioException("O tipo de plano é obrigatório");
 		}
 
+		PlanoFactory factory;
 		switch (tipoPlano) {
 			case MENSAL:
-				return new PlanoMensal();
+				factory = new MensalFactory();
+				break;
 			case TRIMESTRAL:
-				return new PlanoTrimestral();
+				factory = new TrimestralFactory();
+				break;
 			case ANUAL:
-				return new PlanoAnual();
+				factory = new AnualFactory();
+				break;
 			case VIP:
-				return new PlanoVip();
+				factory = new VipFactory();
+				break;
 			default:
 				throw new RegraNegocioException("Tipo de plano inválido: " + tipoPlano);
 		}
+		return factory.criar();
+	}
+
+	private static final class MensalFactory extends PlanoFactory {
+		@Override
+		protected Plano criar() { return new PlanoMensal(); }
+	}
+
+	private static final class TrimestralFactory extends PlanoFactory {
+		@Override
+		protected Plano criar() { return new PlanoTrimestral(); }
+	}
+
+	private static final class AnualFactory extends PlanoFactory {
+		@Override
+		protected Plano criar() { return new PlanoAnual(); }
+	}
+
+	private static final class VipFactory extends PlanoFactory {
+		@Override
+		protected Plano criar() { return new PlanoVip(); }
 	}
 }

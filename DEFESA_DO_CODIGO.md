@@ -7,13 +7,11 @@ Este documento foi elaborado para guiar a equipe durante a apresentação oral e
 ## 1. Demonstrar o Funcionamento do Sistema
 
 ### Como Executar o Sistema
-No terminal, navegue até a pasta raiz do projeto e execute os comandos:
+No PowerShell, com um JDK 17 ou superior disponível no `PATH`, navegue até a pasta raiz do projeto e execute:
 
-```bash
-# 1. Compilar os arquivos Java com codificação UTF-8
-javac -encoding UTF-8 -d bin -sourcepath src src/com/academia/Main.java src/com/academia/config/*.java src/com/academia/exception/*.java src/com/academia/factory/*.java src/com/academia/model/*.java src/com/academia/repository/*.java src/com/academia/service/*.java
-
-# 2. Executar a demonstração principal
+```powershell
+$sources = Get-ChildItem src -Recurse -Filter *.java | ForEach-Object FullName
+javac -encoding UTF-8 -d bin $sources
 java -cp bin com.academia.Main
 ```
 
@@ -28,10 +26,13 @@ java -cp bin com.academia.Main
 3. **Cadastro de Entidades (Herança e Polimorfismo)**
    - *Falar:* "Cadastramos o instrutor Carlos Silva e os alunos Enzo Hashimoto e Mariana Costa. Ambas as entidades estendem a classe abstrata `Pessoa`, demonstrando o princípio de reuso por herança (LSP)."
 
-4. **Matrícula com Padrão Factory Method & Cálculo de Preço (OCP / Template Method)**
-   - *Falar:* "Ao matricular o aluno Enzo no plano **ANUAL** e a aluna Mariana no plano **VIP**, não instanciamos as classes concretas diretamente no serviço. Utilizamos o `PlanoFactory.criarPlano(tipoPlano)`. O valor total é calculatedo automaticamente pelo método `calcularValorTotal()`, que aplica o desconto correto de cada plano."
+4. **Matrícula com Factory Method & Cálculo de Preço (OCP / Template Method)**
+   - *Falar:* "Ao matricular o aluno Enzo no plano **ANUAL** e a aluna Mariana no plano **VIP**, não instanciamos as classes concretas diretamente no serviço. Utilizamos o `PlanoFactory.criarPlano(tipoPlano)`. O valor total é calculado automaticamente pelo método `calcularValorTotal()`, que aplica o desconto correto de cada plano."
 
-5. **Prescrição de Ficha de Treino**
+5. **Tratamento de Exceções**
+   - *Falar:* "A demonstração tenta repetir uma matrícula e matricular um aluno inexistente. As exceções são capturadas com `try/catch`, exibindo mensagens sem encerrar o programa."
+
+6. **Prescrição de Ficha de Treino**
    - *Falar:* "Por fim, o serviço `TreinoService` valida se o aluno possui matrícula ativa, associa um instrutor responsável e prescreve exercícios específicos com séries, repetições e tempo de descanso."
 
 ---
@@ -106,8 +107,20 @@ classDiagram
     }
 
     class PlanoFactory {
+        <<abstract>>
+        #criar() Plano*
         +criarPlano(TipoPlano) Plano$
     }
+
+    class MensalFactory
+    class TrimestralFactory
+    class AnualFactory
+    class VipFactory
+
+    PlanoFactory <|-- MensalFactory
+    PlanoFactory <|-- TrimestralFactory
+    PlanoFactory <|-- AnualFactory
+    PlanoFactory <|-- VipFactory
 
     class Repository~T, ID~ {
         <<interface>>
@@ -131,11 +144,13 @@ classDiagram
 
     class MatriculaService {
         -MatriculaRepository matriculaRepository
+        -AlunoRepository alunoRepository
         +matricular(Long, TipoPlano) Matricula
         +cancelar(Long)
     }
 
     MatriculaService --> MatriculaRepository : Injeção de Dependência
+    MatriculaService --> AlunoRepository : Valida aluno
     MatriculaService ..> PlanoFactory : Usa
     PlanoAnual ..> AcademiaConfig : Consulta Desconto
 ```
@@ -157,27 +172,33 @@ A **Injeção de Dependência (DI)** foi implementada via **Construtor** em toda
 1. **`MatriculaService.java`**
    ```java
    private final MatriculaRepository matriculaRepository;
+   private final AlunoRepository alunoRepository;
 
    // Injeção de Dependência via Construtor
-   public MatriculaService(MatriculaRepository matriculaRepository) {
+   public MatriculaService(MatriculaRepository matriculaRepository,
+                           AlunoRepository alunoRepository) {
        this.matriculaRepository = matriculaRepository;
+       this.alunoRepository = alunoRepository;
    }
    ```
-   *Explicação:* `MatriculaService` não cria o repositório com `new MatriculaRepositoryImpl()`. Ele recebe a interface `MatriculaRepository`.
+   *Explicação:* `MatriculaService` recebe as interfaces `MatriculaRepository` e `AlunoRepository` para validar a existência do aluno e atualizar seu estado de matrícula.
 
 2. **`TreinoService.java`**
    ```java
    private final TreinoRepository treinoRepository;
    private final AlunoRepository alunoRepository;
    private final InstrutorRepository instrutorRepository;
+   private final MatriculaRepository matriculaRepository;
 
    // Injeção de Múltiplas Dependências via Construtor
    public TreinoService(TreinoRepository treinoRepository,
                         AlunoRepository alunoRepository,
-                        InstrutorRepository instrutorRepository) {
+                        InstrutorRepository instrutorRepository,
+                        MatriculaRepository matriculaRepository) {
        this.treinoRepository = treinoRepository;
        this.alunoRepository = alunoRepository;
        this.instrutorRepository = instrutorRepository;
+       this.matriculaRepository = matriculaRepository;
    }
    ```
 
@@ -205,9 +226,9 @@ A **Injeção de Dependência (DI)** foi implementada via **Construtor** em toda
 
 ## 5. Explicação dos Padrões de Projeto Escolhidos
 
-### A. Factory Method / Simple Factory (`PlanoFactory`)
+### A. Factory Method (`PlanoFactory`)
 - **Problema Resolvido:** Evita espalhar a criação manual de instâncias de `Plano` pelo sistema.
-- **Como Funciona:** O método estático `PlanoFactory.criarPlano(tipoPlano)` recebe o enum `TipoPlano` e retorna a instância apropriada (`PlanoMensal`, `PlanoAnual`, etc.).
+- **Como Funciona:** `criarPlano(tipoPlano)` escolhe um criador concreto. Cada criador sobrescreve o método `criar()` para instanciar um subtipo de `Plano`.
 - **Vantagem:** Isola a lógica de instanciação em um único ponto da aplicação.
 
 ### B. Singleton (`AcademiaConfig`)
@@ -234,7 +255,7 @@ A **Injeção de Dependência (DI)** foi implementada via **Construtor** em toda
 > *Resposta:* A Herança representa uma relação do tipo **"É UM"** (`Aluno` é uma `Pessoa`, compartilhando atributos como nome, CPF e e-mail). A Injeção de Dependência representa uma relação do tipo **"USA UM"** (`MatriculaService` usa um `MatriculaRepository` para persistir os dados).
 
 > **P3: Se a academia quiser criar um novo plano "Plano Semestral", quais arquivos precisam ser alterados?**
-> *Resposta:* Graças ao **OCP (Open/Closed)** e ao **Factory Method**, precisamos apenas:
+> *Resposta:* O método de cálculo em `Plano` segue o **OCP**, pois não precisa mudar. A seleção do criador no **Factory Method** precisa ser atualizada para reconhecer o novo tipo:
 > 1. Criar a nova subclasse `PlanoSemestral extends Plano`;
 > 2. Adicionar a opção `SEMESTRAL` no enum `TipoPlano`;
 > 3. Adicionar o `case SEMESTRAL:` dentro do `PlanoFactory`.
