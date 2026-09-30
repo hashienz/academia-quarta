@@ -1,9 +1,8 @@
 package com.academia.model;
 
-/**
- * Subclasse concreta representando o Plano Trimestral.
- * Herda de Plano e define desconto de 5%.
- */
+
+ //Herda de Plano e define desconto de 5%.
+
 public class PlanoTrimestral extends Plano {
 
     public PlanoTrimestral() {

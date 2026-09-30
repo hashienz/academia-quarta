@@ -1,9 +1,5 @@
 package com.academia.model;
 
-/**
- * Subclasse concreta representando o Plano VIP.
- * Exemplo da facilidade de extensão do sistema respeitando o princípio OCP (Open/Closed Principle).
- */
 public class PlanoVip extends Plano {
 
     public PlanoVip() {

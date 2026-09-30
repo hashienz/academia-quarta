@@ -60,7 +60,7 @@ public class Main {
         System.out.println("Aluno 2 Cadastrado: ID " + aluno2.getId() + " - " + aluno2.getNome() + "\n");
 
         // --------------------------------------------------------------------
-        // 4. MATRÍCULA COM FACTORY METHOD E TEMPLATE METHOD (OCP / SOLID)
+        // 4. MATRÍCULA COM FACTORY METHOD (OCP / SOLID)
         // --------------------------------------------------------------------
         System.out.println(">>> 4. Realizando Matrículas (Padrão Factory Method)");
         Matricula mat1 = matriculaService.matricular(aluno1.getId(), TipoPlano.ANUAL);

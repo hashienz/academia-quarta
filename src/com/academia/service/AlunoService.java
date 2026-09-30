@@ -8,11 +8,9 @@ import com.academia.repository.AlunoRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * [PRINCÍPIO SOLID: SRP & DIP]
- * Serviço responsável pelas regras de negócio relacionadas a Alunos.
- * Utiliza Injeção de Dependência via construtor para receber a interface do repositório.
- */
+ //[PRINCÍPIO SOLID: SRP & DIP]
+ //Utiliza Injeção de Dependência via construtor para receber a interface do repositório.
+
 public class AlunoService {
 
     private final AlunoRepository alunoRepository;

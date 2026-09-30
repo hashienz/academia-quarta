@@ -2,11 +2,7 @@ package com.academia.model;
 
 import java.time.LocalDate;
 
-/**
- * [HERANÇA / SOLID: LSP]
- * Representa um Aluno matriculado na academia.
- * Herda atributos e comportamentos fundamentais da classe Pessoa.
- */
+//HERANÇA / SOLID: LSP]//
 public class Aluno extends Pessoa {
 
     private boolean matriculaAtiva;

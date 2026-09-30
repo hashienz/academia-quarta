@@ -2,10 +2,9 @@ package com.academia.model;
 
 import com.academia.config.AcademiaConfig;
 
-/**
- * Subclasse concreta representando o Plano Anual.
- * Obtém a taxa de desconto centralizada a partir da configuração da academia (Singleton).
- */
+
+ //Obtém a taxa de desconto centralizada a partir da configuração da academia (Singleton).
+
 public class PlanoAnual extends Plano {
 
     public PlanoAnual() {

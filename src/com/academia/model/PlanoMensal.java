@@ -1,9 +1,5 @@
 package com.academia.model;
 
-/**
- * Subclasse concreta representando o Plano Mensal.
- * Herda de Plano e define o desconto e benefícios específicos.
- */
 public class PlanoMensal extends Plano {
 
     public PlanoMensal() {

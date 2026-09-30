@@ -10,11 +10,10 @@ import com.academia.repository.MatriculaRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * [PRINCÍPIO SOLID: SRP & DIP]
- * Serviço responsável por coordenar as regras de negócio das matrículas.
- * Utiliza Injeção de Dependência e o padrão Factory (PlanoFactory).
- */
+
+ //[PRINCÍPIO SOLID: SRP & DIP]
+ //Utiliza Injeção de Dependência e o padrão Factory (PlanoFactory).
+
 public class MatriculaService {
 
 	// [INJEÇÃO DE DEPENDÊNCIA - DIP] Depende de abstração (Interface MatriculaRepository), não de classe concreta

@@ -1,8 +1,5 @@
 package com.academia.model;
 
-/**
- * Modelo de domínio simples que representa um exercício específico prescrito em uma ficha de treino.
- */
 public class Exercicio {
 
     private Long id;

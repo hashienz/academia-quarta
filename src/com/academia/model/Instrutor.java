@@ -2,11 +2,7 @@ package com.academia.model;
 
 import java.time.LocalDate;
 
-/**
- * [HERANÇA / SOLID: LSP]
- * Representa um Instrutor/Personal Trainer na academia.
- * Herda atributos de Pessoa e adiciona dados profissionais específicos (CREF, Especialidade).
- */
+//[HERANÇA / SOLID: LSP]//
 public class Instrutor extends Pessoa {
 
     private String especialidade;

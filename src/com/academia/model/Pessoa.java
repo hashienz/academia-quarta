@@ -2,11 +2,9 @@ package com.academia.model;
 
 import java.time.LocalDate;
 
-/**
- * [PRINCÍPIO SOLID: LSP (Liskov Substitution Principle)]
- * Classe abstrata base que representa uma pessoa no sistema.
- * Subclasses (Aluno, Instrutor) podem substituir a superclasse em qualquer ponto do código.
- */
+//[PRINCÍPIO SOLID: LSP (Liskov Substitution Principle)]
+// Classe abstrata base que representa uma pessoa no sistema.
+
 public abstract class Pessoa {
 
     private Long id;
