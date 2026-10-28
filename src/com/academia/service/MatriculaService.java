@@ -6,6 +6,7 @@ import com.academia.factory.PlanoFactory;
 import com.academia.factory.TipoPlano;
 import com.academia.model.Aluno;
 import com.academia.model.Matricula;
+import com.academia.model.Plano;
 import com.academia.repository.AlunoRepository;
 import com.academia.repository.MatriculaRepository;
 
@@ -35,8 +36,16 @@ public class MatriculaService {
 	}
 
 	public Matricula matricular(Long alunoId, TipoPlano tipoPlano) {
+		// [USO DO FACTORY] A criação do objeto Plano é delegada ao PlanoFactory
+		return matricular(alunoId, PlanoFactory.criarPlano(tipoPlano));
+	}
+
+	public Matricula matricular(Long alunoId, Plano plano) {
 		if (alunoId == null || alunoId <= 0) {
 			throw new RegraNegocioException("O ID do aluno deve ser positivo");
+		}
+		if (plano == null) {
+			throw new RegraNegocioException("O plano é obrigatório");
 		}
 		Aluno aluno = alunoRepository.buscarPorId(alunoId)
 				.orElseThrow(() -> new EntidadeNaoEncontradaException("Aluno não encontrado com ID: " + alunoId));
@@ -44,8 +53,7 @@ public class MatriculaService {
 			throw new RegraNegocioException("O aluno já possui uma matrícula ativa");
 		}
 
-		// [USO DO FACTORY] A criação do objeto Plano é delegada ao PlanoFactory
-		Matricula matricula = new Matricula(null, alunoId, PlanoFactory.criarPlano(tipoPlano), LocalDate.now());
+		Matricula matricula = new Matricula(null, alunoId, plano, LocalDate.now());
 		Matricula salva = matriculaRepository.salvar(matricula);
 		aluno.setMatriculaAtiva(true);
 		alunoRepository.salvar(aluno);

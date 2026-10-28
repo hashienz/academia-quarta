@@ -1,117 +1,72 @@
 package com.academia;
 
-import com.academia.config.AcademiaConfig;
-import com.academia.exception.EntidadeNaoEncontradaException;
-import com.academia.exception.RegraNegocioException;
+import com.academia.decorator.AcessoPiscinaDecorator;
+import com.academia.decorator.NutricionistaDecorator;
+import com.academia.decorator.PersonalTrainerDecorator;
+import com.academia.factory.PlanoFactory;
 import com.academia.factory.TipoPlano;
-import com.academia.model.*;
-import com.academia.repository.*;
-import com.academia.service.*;
+import com.academia.model.Aluno;
+import com.academia.model.Matricula;
+import com.academia.model.Plano;
+import com.academia.repository.AlunoRepository;
+import com.academia.repository.AlunoRepositoryImpl;
+import com.academia.repository.MatriculaRepository;
+import com.academia.repository.MatriculaRepositoryImpl;
+import com.academia.service.AlunoService;
+import com.academia.service.MatriculaService;
 
 import java.time.LocalDate;
 
 public class Main {
 
     public static void main(String[] args) {
-        // --------------------------------------------------------------------
-        // 1. DEMONSTRAÇÃO DO PADRÃO SINGLETON (Configuração Global)
-        // --------------------------------------------------------------------
-        System.out.println(">>> 1. Configuração Global da Academia (Padrão Singleton)");
-        AcademiaConfig config = AcademiaConfig.getInstance();
-        System.out.println("Nome da Academia: " + config.getNomeAcademia());
-        System.out.println("Horário de Funcionamento: " + config.getHorarioAbertura() + " às " + config.getHorarioFechamento());
-        System.out.println("Capacidade Máxima: " + config.getCapacidadeMaximaAlunos() + " alunos");
-        System.out.println("Desconto do Plano Anual: " + (config.getPercentualDescontoPlanoAnual() * 100) + "%\n");
-
-        // --------------------------------------------------------------------
-        // 2. DEMONSTRAÇÃO DE INJEÇÃO DE DEPENDÊNCIA (DIP / SOLID)
-        // --------------------------------------------------------------------
-        System.out.println(">>> 2. Inicializando Repositórios e Serviços (Injeção de Dependência)");
-        // Instanciação das implementações concretas dos Repositórios
+        // Inicialização mínima necessária para o teste
         AlunoRepository alunoRepo = new AlunoRepositoryImpl();
-        InstrutorRepository instrutorRepo = new InstrutorRepositoryImpl();
         MatriculaRepository matriculaRepo = new MatriculaRepositoryImpl();
-        TreinoRepository treinoRepo = new TreinoRepositoryImpl();
 
-        // Injeção de Dependências via Construtor nos Serviços
         AlunoService alunoService = new AlunoService(alunoRepo);
-        InstrutorService instrutorService = new InstrutorService(instrutorRepo);
         MatriculaService matriculaService = new MatriculaService(matriculaRepo, alunoRepo);
-        TreinoService treinoService = new TreinoService(treinoRepo, alunoRepo, instrutorRepo, matriculaRepo);
 
-        System.out.println("[OK] Serviços inicializados com suas abstrações injetadas com sucesso.\n");
-
-        // --------------------------------------------------------------------
-        // 3. CADASTRO DE INSTRUTORES E ALUNOS (Herança + LSP + SRP)
-        // --------------------------------------------------------------------
-        System.out.println(">>> 3. Cadastrando Pessoas no Sistema (Herança de Pessoa)");
-        Instrutor instrutor1 = instrutorService.cadastrar(
-                "Carlos Silva", "111.222.333-44", "carlos@academia.com",
-                LocalDate.of(1990, 5, 15), "Musculação & Hipertrofia", "CREF-123456-G/SP", LocalDate.now()
-        );
-        System.out.println("Instrutor Cadastrado: " + instrutor1.getNome() + " | CREF: " + instrutor1.getCref());
-
-        Aluno aluno1 = alunoService.cadastrar(
-                "Enzo Hashimoto", "222.333.444-55", "enzo@email.com", LocalDate.of(2002, 8, 20)
-        );
-        Aluno aluno2 = alunoService.cadastrar(
-                "Mariana Costa", "333.444.555-66", "mariana@email.com", LocalDate.of(2001, 3, 10)
-        );
-        System.out.println("Aluno 1 Cadastrado: ID " + aluno1.getId() + " - " + aluno1.getNome());
-        System.out.println("Aluno 2 Cadastrado: ID " + aluno2.getId() + " - " + aluno2.getNome() + "\n");
-
-        // --------------------------------------------------------------------
-        // 4. MATRÍCULA COM FACTORY METHOD (OCP / SOLID)
-        // --------------------------------------------------------------------
-        System.out.println(">>> 4. Realizando Matrículas (Padrão Factory Method)");
-        Matricula mat1 = matriculaService.matricular(aluno1.getId(), TipoPlano.ANUAL);
-        Matricula mat2 = matriculaService.matricular(aluno2.getId(), TipoPlano.VIP);
-
-        System.out.println("\n--- Detalhes da Matrícula 1 ---");
-        System.out.println("Aluno: " + aluno1.getNome());
-        System.out.println("Plano: " + mat1.getPlano().getDescricao());
-        System.out.println("Mensalidade Base: R$ " + mat1.getPlano().getValorMensal());
-        System.out.println("Duração: " + mat1.getPlano().getDuracaoMeses() + " meses");
-        System.out.println("Valor Total com Desconto: R$ " + String.format("%.2f", mat1.getPlano().calcularValorTotal()));
-        System.out.println("Benefícios: " + mat1.getPlano().getBeneficios());
-
-        System.out.println("\n--- Detalhes da Matrícula 2 ---");
-        System.out.println("Aluno: " + aluno2.getNome());
-        System.out.println("Plano: " + mat2.getPlano().getDescricao());
-        System.out.println("Valor Total com Desconto: R$ " + String.format("%.2f", mat2.getPlano().calcularValorTotal()));
-        System.out.println("Benefícios: " + mat2.getPlano().getBeneficios() + "\n");
-
-        // Tratamento de erros de negócio sem interromper a demonstração.
-        try {
-            matriculaService.matricular(aluno1.getId(), TipoPlano.MENSAL);
-        } catch (RegraNegocioException e) {
-            System.out.println("Matrícula duplicada bloqueada: " + e.getMessage());
-        }
-        try {
-            matriculaService.matricular(999L, TipoPlano.MENSAL);
-        } catch (EntidadeNaoEncontradaException e) {
-            System.out.println("Aluno inexistente bloqueado: " + e.getMessage() + "\n");
-        }
-
-        // --------------------------------------------------------------------
-        // 5. PRESCRIÇÃO E GESTÃO DE TREINOS
-        // --------------------------------------------------------------------
-        System.out.println(">>> 5. Prescrevendo Ficha de Treino");
-        Treino treinoEnzo = treinoService.criarTreino(
-                aluno1.getId(), instrutor1.getId(), "Treino A - Peito e Tríceps", "Hipertrofia"
+        Aluno aluno = alunoService.cadastrar(
+                "Enzo", "222.333.444-55", "enzo@email.com", LocalDate.of(2002, 8, 20)
         );
 
-        treinoService.adicionarExercicio(treinoEnzo.getId(), "Supino Reto com Barra", "Peitoral", 4, 10, 60);
-        treinoService.adicionarExercicio(treinoEnzo.getId(), "Supino Inclinado com Halteres", "Peitoral", 3, 12, 45);
-        treinoService.adicionarExercicio(treinoEnzo.getId(), "Tríceps Testa", "Tríceps", 4, 12, 45);
+        // --------------------------------------------------------------------
+        // DEMONSTRAÇÃO DO PADRÃO DECORATOR (Adicionais Dinâmicos ao Plano)
+        // --------------------------------------------------------------------
+        System.out.println(">>> Demonstração do Padrão Decorator nos Planos da Academia\n");
 
-        System.out.println("Ficha de Treino Criada: " + treinoEnzo.getNomeTreino() + " (Objetivo: " + treinoEnzo.getObjetivo() + ")");
-        System.out.println("Instrutor Responsável: " + treinoEnzo.getInstrutor().getNome());
-        System.out.println("Exercícios Prescritos:");
-        for (Exercicio ex : treinoEnzo.getExercicios()) {
-            System.out.println(" - " + ex);
-        }
+        // 1. Plano base criado via Factory
+        Plano plano = PlanoFactory.criarPlano(TipoPlano.TRIMESTRAL);
+        System.out.println("[1] Plano Base:");
+        exibirResumoPlano(plano);
 
-       
+        // 2. Adicionando Personal Trainer dinamicamente
+        plano = new PersonalTrainerDecorator(plano);
+        System.out.println("\n[2] Após adicionar PersonalTrainerDecorator:");
+        exibirResumoPlano(plano);
+
+        // 3. Adicionando Acesso à Piscina dinamicamente
+        plano = new AcessoPiscinaDecorator(plano);
+        System.out.println("\n[3] Após adicionar AcessoPiscinaDecorator:");
+        exibirResumoPlano(plano);
+
+        // 4. Adicionando Nutricionista dinamicamente
+        plano = new NutricionistaDecorator(plano);
+        System.out.println("\n[4] Após adicionar NutricionistaDecorator:");
+        exibirResumoPlano(plano);
+
+        // 5. Realizando a matrícula com o plano decorado
+        Matricula matricula = matriculaService.matricular(aluno.getId(), plano);
+        System.out.println("\n>>> Matrícula confirmada para " + aluno.getNome()
+                + " | Plano final: " + matricula.getPlano().getDescricao()
+                + " | Total: R$ " + String.format("%.2f", matricula.getPlano().calcularValorTotal()));
+    }
+
+    private static void exibirResumoPlano(Plano plano) {
+        System.out.println("  Descrição: " + plano.getDescricao());
+        System.out.println("  Mensalidade: R$ " + String.format("%.2f", plano.getValorMensal()));
+        System.out.println("  Valor Total (" + plano.getDuracaoMeses() + " meses): R$ " + String.format("%.2f", plano.calcularValorTotal()));
+        System.out.println("  Benefícios: " + plano.getBeneficios());
     }
 }

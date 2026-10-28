@@ -1,3 +1,6 @@
+
+
+
 # Roteiro e Guia de Defesa do Código - Academia Quarta
 
 Este documento foi elaborado para guiar a equipe durante a apresentação oral e defesa do projeto **Academia Quarta**. Ele atende integralmente aos 6 requisitos solicitados pela banca avaliadora.
