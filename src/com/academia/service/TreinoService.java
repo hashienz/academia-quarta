@@ -61,6 +61,22 @@ public class TreinoService {
         return treinoRepository.salvar(treino);
     }
 
+    public Treino duplicarTreinoParaAluno(Long treinoModeloId, Long alunoId) {
+        Treino modelo = treinoRepository.buscarPorId(treinoModeloId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Treino não encontrado com ID: " + treinoModeloId));
+
+        Aluno aluno = alunoRepository.buscarPorId(alunoId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Aluno não encontrado com ID: " + alunoId));
+
+        if (matriculaRepository.buscarAtivaPorAlunoId(alunoId).isEmpty()) {
+            throw new RegraNegocioException("Não é possível prescrever treino para aluno com matrícula inativa: " + aluno.getNome());
+        }
+
+        Treino copia = modelo.clonar();
+        copia.setAluno(aluno);
+        return treinoRepository.salvar(copia);
+    }
+
     public List<Treino> listarPorAluno(Long alunoId) {
         return treinoRepository.buscarPorAlunoId(alunoId);
     }

@@ -1,6 +1,8 @@
 package com.academia.model;
 
-public class Exercicio {
+import com.academia.prototype.Prototype;
+
+public class Exercicio implements Prototype<Exercicio> {
 
     private Long id;
     private String nome;
@@ -16,6 +18,19 @@ public class Exercicio {
         this.series = series;
         this.repeticoes = repeticoes;
         this.descansoSegundos = descansoSegundos;
+    }
+
+    @Override
+    public Exercicio clonar() {
+        return new Exercicio(id, nome, grupoMuscular, series, repeticoes, descansoSegundos);
+    }
+
+    public void setSeries(int series) {
+        this.series = series;
+    }
+
+    public void setRepeticoes(int repeticoes) {
+        this.repeticoes = repeticoes;
     }
 
     public Long getId() {
