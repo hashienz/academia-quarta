@@ -35,8 +35,10 @@ java -cp bin com.academia.Main
 5. **Tratamento de Exceções**
    - *Falar:* "A demonstração tenta repetir uma matrícula e matricular um aluno inexistente. As exceções são capturadas com `try/catch`, exibindo mensagens sem encerrar o programa."
 
-6. **Prescrição de Ficha de Treino**
-   - *Falar:* "Por fim, o serviço `TreinoService` valida se o aluno possui matrícula ativa, associa um instrutor responsável e prescreve exercícios específicos com séries, repetições e tempo de descanso."
+6. **Prescrição de Ficha de Treino (Strategy)**
+   - *Falar:* "O `TreinoService` valida a matrícula ativa e recebe uma estratégia de prescrição. Podemos trocar entre hipertrofia e resistência sem alterar o serviço; cada estratégia define séries, repetições e descanso."
+7. **Clonagem de Treino (Prototype)**
+   - *Falar:* "Clonamos um treino completo para outro aluno e ajustamos o clone, mostrando que a cópia profunda dos exercícios não modifica o treino original."
 
 ---
 
@@ -246,6 +248,11 @@ A **Injeção de Dependência (DI)** foi implementada via **Construtor** em toda
 ### D. Template Method (`Plano.calcularValorTotal()`)
 - **Problema Resolvido:** Padroniza o algoritmo de cálculo do valor total do plano.
 - **Como Funciona:** A classe base `Plano` define a fórmula `valorMensal * duracaoMeses * (1 - getPercentualDesconto())`, enquanto cada subclasse implementa apenas a variação do método `getPercentualDesconto()`.
+
+### E. Strategy (`EstrategiaTreino`)
+- **Problema Resolvido:** Permite variar a prescrição de exercícios sem concentrar regras de séries, repetições e descanso no `TreinoService`.
+- **Como Funciona:** O serviço recebe uma implementação de `EstrategiaTreino`. `EstrategiaHipertrofia` e `EstrategiaResistencia` aplicam parâmetros diferentes, e novas estratégias podem ser adicionadas sem modificar o serviço. A prescrição manual continua disponível.
+- **Vantagem:** O algoritmo de prescrição pode ser escolhido no momento de adicionar cada exercício.
 
 ---
 

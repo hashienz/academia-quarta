@@ -10,6 +10,7 @@ import com.academia.repository.AlunoRepository;
 import com.academia.repository.InstrutorRepository;
 import com.academia.repository.MatriculaRepository;
 import com.academia.repository.TreinoRepository;
+import com.academia.strategy.EstrategiaTreino;
 
 import java.util.List;
 
@@ -52,12 +53,25 @@ public class TreinoService {
     }
 
     public Treino adicionarExercicio(Long treinoId, String nomeExercicio, String grupoMuscular, int series, int repeticoes, int descansoSegundos) {
+        Exercicio exercicio = new Exercicio(null, nomeExercicio, grupoMuscular, series, repeticoes, descansoSegundos);
+        return adicionarExercicio(treinoId, exercicio);
+    }
+
+    public Treino adicionarExercicio(Long treinoId, String nomeExercicio, String grupoMuscular, EstrategiaTreino estrategia) {
+        if (estrategia == null) {
+            throw new IllegalArgumentException("A estratégia de treino é obrigatória");
+        }
+        Exercicio exercicio = estrategia.prescreverExercicio(nomeExercicio, grupoMuscular);
+        if (exercicio == null) {
+            throw new IllegalStateException("A estratégia de treino não prescreveu um exercício");
+        }
+        return adicionarExercicio(treinoId, exercicio);
+    }
+
+    private Treino adicionarExercicio(Long treinoId, Exercicio exercicio) {
         Treino treino = treinoRepository.buscarPorId(treinoId)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Treino não encontrado com ID: " + treinoId));
-
-        Exercicio exercicio = new Exercicio(null, nomeExercicio, grupoMuscular, series, repeticoes, descansoSegundos);
         treino.adicionarExercicio(exercicio);
-
         return treinoRepository.salvar(treino);
     }
 

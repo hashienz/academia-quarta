@@ -24,6 +24,9 @@ import com.academia.service.AlunoService;
 import com.academia.service.InstrutorService;
 import com.academia.service.MatriculaService;
 import com.academia.service.TreinoService;
+import com.academia.strategy.EstrategiaHipertrofia;
+import com.academia.strategy.EstrategiaResistencia;
+import com.academia.strategy.EstrategiaTreino;
 
 import java.time.LocalDate;
 
@@ -93,24 +96,40 @@ public class Main {
         );
         matriculaService.matricular(outroAluno.getId(), TipoPlano.MENSAL);
 
-        // 1. Treino original montado exercício por exercício
+        // --------------------------------------------------------------------
+        // DEMONSTRAÇÃO DO PADRÃO STRATEGY (Prescrição de Exercícios)
+        // --------------------------------------------------------------------
+        System.out.println("\n=== Padrão Strategy: prescrição de exercícios ===\n");
+
+        // 1. A estratégia de hipertrofia define séries, repetições e descanso
+        EstrategiaTreino estrategiaHipertrofia = new EstrategiaHipertrofia();
         Treino original = treinoService.criarTreino(aluno.getId(), instrutor.getId(), "Treino A", "Hipertrofia");
-        treinoService.adicionarExercicio(original.getId(), "Supino Reto", "Peito", 4, 10, 60);
-        treinoService.adicionarExercicio(original.getId(), "Crucifixo", "Peito", 3, 12, 45);
-        treinoService.adicionarExercicio(original.getId(), "Tríceps Corda", "Tríceps", 3, 12, 45);
+        treinoService.adicionarExercicio(original.getId(), "Supino Reto", "Peito", estrategiaHipertrofia);
+        treinoService.adicionarExercicio(original.getId(), "Crucifixo", "Peito", estrategiaHipertrofia);
+        treinoService.adicionarExercicio(original.getId(), "Tríceps Corda", "Tríceps", estrategiaHipertrofia);
         System.out.println("[1] Treino original:");
         exibirTreino(original);
 
+        EstrategiaTreino estrategiaResistencia = new EstrategiaResistencia();
+        Treino treinoResistencia = treinoService.criarTreino(
+                outroAluno.getId(), instrutor.getId(), "Treino B", "Resistência"
+        );
+        treinoService.adicionarExercicio(
+                treinoResistencia.getId(), "Esteira", "Cardiorrespiratório", estrategiaResistencia
+        );
+        System.out.println("\n[2] Treino com estratégia de resistência:");
+        exibirTreino(treinoResistencia);
+
         // 2. Clonando o treino para outro aluno, sem recadastrar os exercícios
         Treino clone = treinoService.duplicarTreinoParaAluno(original.getId(), outroAluno.getId());
-        System.out.println("\n[2] Treino clonado:");
+        System.out.println("\n[3] Treino clonado:");
         exibirTreino(clone);
 
         // 3. Alterando o clone para provar que é uma cópia independente
         Exercicio supinoDoClone = clone.getExercicios().get(0);
         supinoDoClone.setSeries(5);
         supinoDoClone.setRepeticoes(6);
-        System.out.println("\n[3] Após ajustar o Supino no clone (5x6):");
+        System.out.println("\n[4] Após ajustar o Supino no clone (5x6):");
         System.out.println("  Clone:    " + supinoDoClone);
         System.out.println("  Original: " + original.getExercicios().get(0));
     }
