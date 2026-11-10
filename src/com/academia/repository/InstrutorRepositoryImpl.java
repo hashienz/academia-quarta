@@ -17,6 +17,9 @@ public class InstrutorRepositoryImpl implements InstrutorRepository {
 
     @Override
     public Instrutor salvar(Instrutor instrutor) {
+        if (instrutor == null) {
+            throw new IllegalArgumentException("O instrutor é obrigatório");
+        }
         if (instrutor.getId() == null) {
             instrutor.setId(idGenerator.getAndIncrement());
         }
@@ -26,7 +29,7 @@ public class InstrutorRepositoryImpl implements InstrutorRepository {
 
     @Override
     public Optional<Instrutor> buscarPorId(Long id) {
-        return Optional.ofNullable(database.get(id));
+        return id == null ? Optional.empty() : Optional.ofNullable(database.get(id));
     }
 
     @Override
@@ -36,7 +39,7 @@ public class InstrutorRepositoryImpl implements InstrutorRepository {
 
     @Override
     public boolean deletar(Long id) {
-        return database.remove(id) != null;
+        return id != null && database.remove(id) != null;
     }
 
     @Override

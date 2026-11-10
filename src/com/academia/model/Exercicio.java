@@ -2,7 +2,11 @@ package com.academia.model;
 
 import com.academia.prototype.Prototype;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class Exercicio implements Prototype<Exercicio> {
+
+    private static final AtomicLong ID_GERADOR = new AtomicLong(1);
 
     private Long id;
     private String nome;
@@ -12,7 +16,14 @@ public class Exercicio implements Prototype<Exercicio> {
     private int descansoSegundos;
 
     public Exercicio(Long id, String nome, String grupoMuscular, int series, int repeticoes, int descansoSegundos) {
-        this.id = id;
+        if (id == null) {
+            this.id = ID_GERADOR.getAndIncrement();
+        } else {
+            this.id = id;
+            if (id >= 0 && id < Long.MAX_VALUE) {
+                ID_GERADOR.accumulateAndGet(id + 1, Math::max);
+            }
+        }
         this.nome = nome;
         this.grupoMuscular = grupoMuscular;
         this.series = series;
@@ -22,7 +33,7 @@ public class Exercicio implements Prototype<Exercicio> {
 
     @Override
     public Exercicio clonar() {
-        return new Exercicio(id, nome, grupoMuscular, series, repeticoes, descansoSegundos);
+        return new Exercicio(null, nome, grupoMuscular, series, repeticoes, descansoSegundos);
     }
 
     public void setSeries(int series) {

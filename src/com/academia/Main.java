@@ -11,6 +11,7 @@ import com.academia.model.Instrutor;
 import com.academia.model.Matricula;
 import com.academia.model.Plano;
 import com.academia.model.Treino;
+import com.academia.observer.ConsoleMatriculaObserver;
 import com.academia.repository.AlunoRepository;
 import com.academia.repository.AlunoRepositoryImpl;
 import com.academia.repository.InstrutorRepository;
@@ -35,6 +36,7 @@ public class Main {
 
         AlunoService alunoService = new AlunoService(alunoRepo);
         MatriculaService matriculaService = new MatriculaService(matriculaRepo, alunoRepo);
+        matriculaService.adicionarObservador(new ConsoleMatriculaObserver());
 
         Aluno aluno = alunoService.cadastrar(
                 "Enzo", "222.333.444-55", "enzo@email.com", LocalDate.of(2002, 8, 20)
@@ -43,26 +45,26 @@ public class Main {
         // --------------------------------------------------------------------
         // DEMONSTRAÇÃO DO PADRÃO DECORATOR (Adicionais Dinâmicos ao Plano)
         // --------------------------------------------------------------------
-        System.out.println(">>> Demonstração do Padrão Decorator nos Planos da Academia\n");
+        System.out.println("=== Padrão Decorator: adicionais ao plano ===\n");
 
         // 1. Plano base criado via Factory
         Plano plano = PlanoFactory.criarPlano(TipoPlano.TRIMESTRAL);
-        System.out.println("[1] Plano Base:");
+        System.out.println("[1] Plano base:");
         exibirResumoPlano(plano);
 
         // 2. Adicionando Personal Trainer dinamicamente
         plano = new PersonalTrainerDecorator(plano);
-        System.out.println("\n[2] Após adicionar PersonalTrainerDecorator:");
+        System.out.println("\n[2] Com Personal Trainer:");
         exibirResumoPlano(plano);
 
         // 3. Adicionando Acesso à Piscina dinamicamente
         plano = new AcessoPiscinaDecorator(plano);
-        System.out.println("\n[3] Após adicionar AcessoPiscinaDecorator:");
+        System.out.println("\n[3] Com acesso à piscina:");
         exibirResumoPlano(plano);
 
         // 4. Adicionando Nutricionista dinamicamente
         plano = new NutricionistaDecorator(plano);
-        System.out.println("\n[4] Após adicionar NutricionistaDecorator:");
+        System.out.println("\n[4] Com nutricionista:");
         exibirResumoPlano(plano);
 
         // 5. Realizando a matrícula com o plano decorado
@@ -74,7 +76,7 @@ public class Main {
         // --------------------------------------------------------------------
         // DEMONSTRAÇÃO DO PADRÃO PROTOTYPE (Clonagem de Treinos)
         // --------------------------------------------------------------------
-        System.out.println("\n>>> Demonstração do Padrão Prototype nos Treinos\n");
+        System.out.println("\n=== Padrão Prototype: clonagem de treinos ===\n");
 
         InstrutorRepository instrutorRepo = new InstrutorRepositoryImpl();
         TreinoRepository treinoRepo = new TreinoRepositoryImpl();

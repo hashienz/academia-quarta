@@ -7,11 +7,14 @@ import com.academia.factory.TipoPlano;
 import com.academia.model.Aluno;
 import com.academia.model.Matricula;
 import com.academia.model.Plano;
+import com.academia.observer.MatriculaEvent;
+import com.academia.observer.MatriculaObserver;
 import com.academia.repository.AlunoRepository;
 import com.academia.repository.MatriculaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
  //[PRINCÍPIO SOLID: SRP & DIP]
@@ -23,6 +26,8 @@ public class MatriculaService {
 	private final MatriculaRepository matriculaRepository;
 	private final AlunoRepository alunoRepository;
 
+	private final CopyOnWriteArrayList<MatriculaObserver> observadores = new CopyOnWriteArrayList<>();
+
 	// Injeção via Construtor
 	public MatriculaService(MatriculaRepository matriculaRepository, AlunoRepository alunoRepository) {
 		if (matriculaRepository == null) {
@@ -33,6 +38,23 @@ public class MatriculaService {
 		}
 		this.matriculaRepository = matriculaRepository;
 		this.alunoRepository = alunoRepository;
+	}
+
+	public void adicionarObservador(MatriculaObserver observador) {
+		if (observador == null) {
+			throw new IllegalArgumentException("O observador é obrigatório");
+		}
+		observadores.addIfAbsent(observador);
+	}
+
+	public void removerObservador(MatriculaObserver observador) {
+		observadores.remove(observador);
+	}
+
+	private void notificarObservadores(MatriculaEvent evento) {
+		for (MatriculaObserver observador : observadores) {
+			observador.atualizar(evento);
+		}
 	}
 
 	public Matricula matricular(Long alunoId, TipoPlano tipoPlano) {
@@ -57,6 +79,7 @@ public class MatriculaService {
 		Matricula salva = matriculaRepository.salvar(matricula);
 		aluno.setMatriculaAtiva(true);
 		alunoRepository.salvar(aluno);
+		notificarObservadores(new MatriculaEvent(MatriculaEvent.Tipo.MATRICULA_CRIADA, salva));
 		return salva;
 	}
 
@@ -84,5 +107,6 @@ public class MatriculaService {
 		matriculaRepository.salvar(matricula);
 		aluno.setMatriculaAtiva(matriculaRepository.buscarAtivaPorAlunoId(aluno.getId()).isPresent());
 		alunoRepository.salvar(aluno);
+		notificarObservadores(new MatriculaEvent(MatriculaEvent.Tipo.MATRICULA_CANCELADA, matricula));
 	}
 }

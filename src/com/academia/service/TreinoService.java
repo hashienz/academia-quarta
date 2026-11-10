@@ -55,7 +55,7 @@ public class TreinoService {
         Treino treino = treinoRepository.buscarPorId(treinoId)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Treino não encontrado com ID: " + treinoId));
 
-        Exercicio exercicio = new Exercicio(System.currentTimeMillis(), nomeExercicio, grupoMuscular, series, repeticoes, descansoSegundos);
+        Exercicio exercicio = new Exercicio(null, nomeExercicio, grupoMuscular, series, repeticoes, descansoSegundos);
         treino.adicionarExercicio(exercicio);
 
         return treinoRepository.salvar(treino);

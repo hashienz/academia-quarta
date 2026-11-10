@@ -16,6 +16,9 @@ public class TreinoRepositoryImpl implements TreinoRepository {
 
     @Override
     public Treino salvar(Treino treino) {
+        if (treino == null) {
+            throw new IllegalArgumentException("O treino é obrigatório");
+        }
         if (treino.getId() == null) {
             treino.setId(idGenerator.getAndIncrement());
         }
@@ -25,7 +28,7 @@ public class TreinoRepositoryImpl implements TreinoRepository {
 
     @Override
     public Optional<Treino> buscarPorId(Long id) {
-        return Optional.ofNullable(database.get(id));
+        return id == null ? Optional.empty() : Optional.ofNullable(database.get(id));
     }
 
     @Override
@@ -35,7 +38,7 @@ public class TreinoRepositoryImpl implements TreinoRepository {
 
     @Override
     public boolean deletar(Long id) {
-        return database.remove(id) != null;
+        return id != null && database.remove(id) != null;
     }
 
     @Override
