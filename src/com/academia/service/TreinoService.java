@@ -52,25 +52,18 @@ public class TreinoService {
         return treinoRepository.salvar(treino);
     }
 
-    public Treino adicionarExercicio(Long treinoId, String nomeExercicio, String grupoMuscular, int series, int repeticoes, int descansoSegundos) {
-        Exercicio exercicio = new Exercicio(null, nomeExercicio, grupoMuscular, series, repeticoes, descansoSegundos);
-        return adicionarExercicio(treinoId, exercicio);
-    }
-
+    // [PADRÃO STRATEGY - Context] A estratégia recebida decide séries, repetições e descanso
     public Treino adicionarExercicio(Long treinoId, String nomeExercicio, String grupoMuscular, EstrategiaTreino estrategia) {
         if (estrategia == null) {
             throw new IllegalArgumentException("A estratégia de treino é obrigatória");
         }
+        Treino treino = treinoRepository.buscarPorId(treinoId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Treino não encontrado com ID: " + treinoId));
+
         Exercicio exercicio = estrategia.prescreverExercicio(nomeExercicio, grupoMuscular);
         if (exercicio == null) {
             throw new IllegalStateException("A estratégia de treino não prescreveu um exercício");
         }
-        return adicionarExercicio(treinoId, exercicio);
-    }
-
-    private Treino adicionarExercicio(Long treinoId, Exercicio exercicio) {
-        Treino treino = treinoRepository.buscarPorId(treinoId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Treino não encontrado com ID: " + treinoId));
         treino.adicionarExercicio(exercicio);
         return treinoRepository.salvar(treino);
     }
