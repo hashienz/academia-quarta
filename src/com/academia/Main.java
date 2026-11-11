@@ -77,9 +77,9 @@ public class Main {
                 + " | Total: R$ " + String.format("%.2f", matricula.getPlano().calcularValorTotal()));
 
         // --------------------------------------------------------------------
-        // DEMONSTRAÇÃO DO PADRÃO PROTOTYPE (Clonagem de Treinos)
+        // PREPARAÇÃO: instrutor e segundo aluno usados nas demonstrações de treino
         // --------------------------------------------------------------------
-        System.out.println("\n=== Padrão Prototype: clonagem de treinos ===\n");
+        System.out.println();
 
         InstrutorRepository instrutorRepo = new InstrutorRepositoryImpl();
         TreinoRepository treinoRepo = new TreinoRepositoryImpl();
@@ -107,7 +107,7 @@ public class Main {
         treinoService.adicionarExercicio(original.getId(), "Supino Reto", "Peito", estrategiaHipertrofia);
         treinoService.adicionarExercicio(original.getId(), "Crucifixo", "Peito", estrategiaHipertrofia);
         treinoService.adicionarExercicio(original.getId(), "Tríceps Corda", "Tríceps", estrategiaHipertrofia);
-        System.out.println("[1] Treino original:");
+        System.out.println("[1] Treino com estratégia de hipertrofia:");
         exibirTreino(original);
 
         EstrategiaTreino estrategiaResistencia = new EstrategiaResistencia();
@@ -120,16 +120,25 @@ public class Main {
         System.out.println("\n[2] Treino com estratégia de resistência:");
         exibirTreino(treinoResistencia);
 
-        // 2. Clonando o treino para outro aluno, sem recadastrar os exercícios
+        // --------------------------------------------------------------------
+        // DEMONSTRAÇÃO DO PADRÃO PROTOTYPE (Clonagem de Treinos)
+        // --------------------------------------------------------------------
+        System.out.println("\n=== Padrão Prototype: clonagem de treinos ===\n");
+
+        // 1. Treino original que servirá de modelo (protótipo)
+        System.out.println("[1] Treino original (modelo):");
+        exibirTreino(original);
+
+        // 2. Clonando o Treino A para outro aluno, sem recadastrar os exercícios
         Treino clone = treinoService.duplicarTreinoParaAluno(original.getId(), outroAluno.getId());
-        System.out.println("\n[3] Treino clonado:");
+        System.out.println("\n[2] Treino A clonado para " + outroAluno.getNome() + ":");
         exibirTreino(clone);
 
         // 3. Alterando o clone para provar que é uma cópia independente
         Exercicio supinoDoClone = clone.getExercicios().get(0);
         supinoDoClone.setSeries(5);
         supinoDoClone.setRepeticoes(6);
-        System.out.println("\n[4] Após ajustar o Supino no clone (5x6):");
+        System.out.println("\n[3] Após ajustar o Supino no clone (5x6):");
         System.out.println("  Clone:    " + supinoDoClone);
         System.out.println("  Original: " + original.getExercicios().get(0));
     }

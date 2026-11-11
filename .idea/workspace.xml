@@ -7,14 +7,6 @@
     <list default="true" id="6da7bf0e-411b-416c-a94d-98e839e7707a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/academia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/academia/exception/AcademiaException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/exception/AcademiaException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/academia/exception/EntidadeNaoEncontradaException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/exception/EntidadeNaoEncontradaException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/academia/exception/RegraNegocioException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/exception/RegraNegocioException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/academia/model/Exercicio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/model/Exercicio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/academia/repository/InstrutorRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/repository/InstrutorRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/academia/repository/TreinoRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/repository/TreinoRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/academia/service/MatriculaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/service/MatriculaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/academia/service/TreinoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/academia/service/TreinoService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,8 +63,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10968.63" />
-        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10968.63" />
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
       </set>
     </attachedChunks>
   </component>
